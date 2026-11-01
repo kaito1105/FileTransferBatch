@@ -40,7 +40,7 @@ public class FileTransferService
     private void MoveToError(string file)
     {
         var fileName = Path.GetFileName(file);
-        var errorPath = Path.Combine(errorFolder, fileName);
+        var errorPath = Path.Combine(_errorFolder, fileName);
 
         File.Move(file, errorPath, true);
     }
