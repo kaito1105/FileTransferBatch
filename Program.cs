@@ -1,4 +1,5 @@
 using FileTransferBatch.Services;
+using FileTransferBatch.Utilities;
 
 public static class Program
 {
@@ -9,8 +10,8 @@ public static class Program
 
         var service = new FileTransferService();
 
-        Console.WriteLine("ファイル転送バッチを開始します。");
+        Logger.Info("ファイル転送バッチ開始");
         service.Execute();
-        Console.WriteLine("ファイル転送バッチを終了します。");
+        Logger.Info("ファイル転送バッチ終了");
     }
 }

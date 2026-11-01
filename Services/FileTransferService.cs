@@ -33,7 +33,7 @@ public class FileTransferService
 
         if (files.Length == 0)
         {
-            Logger.Info("転送するファイルがありません。");
+            Logger.Info("転送ファイルなし");
             return;
         }
 
@@ -43,7 +43,7 @@ public class FileTransferService
             {
                 var fileName = Path.GetFileName(file);
                 bool isValid = new FileValidator().Validate(file);
-                
+
                 if (!isValid)
                 {
                     Logger.Error($"無効なファイル形式（転送失敗）: {fileName}");
