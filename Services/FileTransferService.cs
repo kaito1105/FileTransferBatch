@@ -2,22 +2,55 @@ namespace FileTransferBatch.Services;
 
 public class FileTransferService
 {
-    private readonly string _inputFolder = "input";
-    private readonly string _destinationFolder = "destination";
-    private readonly string _processedFolder = "processed";
-    private readonly string _errorFolder = "error";
+    private readonly string baseFolder;
+    private readonly string inputFolder;
+    private readonly string destinationFolder;
+    private readonly string processedFolder;
+    private readonly string errorFolder;
+
+    public FileTransferService()
+    {
+        baseFolder = Path.GetFullPath(
+                    Path.Combine(AppContext.BaseDirectory, "..", "..", "..")
+                );
+        inputFolder = Path.Combine(baseFolder, "input");
+        destinationFolder = Path.Combine(baseFolder, "destination");
+        processedFolder = Path.Combine(baseFolder, "processed");
+        errorFolder = Path.Combine(baseFolder, "error");
+
+        // フォルダが存在しない場合は作成
+        Directory.CreateDirectory(inputFolder);
+        Directory.CreateDirectory(destinationFolder);
+        Directory.CreateDirectory(processedFolder);
+        Directory.CreateDirectory(errorFolder);
+    }
 
     public void Execute()
     {
-        var files = Directory.GetFiles(_inputFolder);
+        var files = Directory.GetFiles(inputFolder);
+
+        if (files.Length == 0)
+        {
+            Console.WriteLine("転送するファイルがありません。");
+            return;
+        }
 
         foreach (var file in files)
         {
             try
             {
                 var fileName = Path.GetFileName(file);
-                var destinationPath = Path.Combine(_destinationFolder, fileName);
-                var processedPath = Path.Combine(_processedFolder, fileName);
+
+                bool isValid = new FileValidator().Validate(file);
+                if (!isValid)
+                {
+                    Console.WriteLine($"無効なファイル形式（転送失敗）: {fileName}");
+                    MoveToError(file);
+                    continue;
+                }
+
+                var destinationPath = Path.Combine(destinationFolder, fileName);
+                var processedPath = Path.Combine(processedFolder, fileName);
 
                 Console.WriteLine($"転送開始: {fileName}");
 
@@ -40,7 +73,7 @@ public class FileTransferService
     private void MoveToError(string file)
     {
         var fileName = Path.GetFileName(file);
-        var errorPath = Path.Combine(_errorFolder, fileName);
+        var errorPath = Path.Combine(errorFolder, fileName);
 
         File.Move(file, errorPath, true);
     }
