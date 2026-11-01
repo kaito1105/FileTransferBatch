@@ -1,6 +1,7 @@
 namespace FileTransferBatch.Services;
 
 using FileTransferBatch.Utilities;
+using FileTransferBatch.Models;
 
 public class FileTransferService
 {
@@ -9,9 +10,11 @@ public class FileTransferService
     private readonly string destinationFolder;
     private readonly string processedFolder;
     private readonly string errorFolder;
+    private readonly List<TransferResult> transferResults;
 
     public FileTransferService()
     {
+        transferResults = new List<TransferResult>();
         baseFolder = Path.GetFullPath(
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..")
         );
