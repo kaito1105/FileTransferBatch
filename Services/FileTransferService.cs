@@ -1,5 +1,7 @@
 namespace FileTransferBatch.Services;
 
+using FileTransferBatch.Utilities;
+
 public class FileTransferService
 {
     private readonly string baseFolder;
@@ -11,8 +13,8 @@ public class FileTransferService
     public FileTransferService()
     {
         baseFolder = Path.GetFullPath(
-                    Path.Combine(AppContext.BaseDirectory, "..", "..", "..")
-                );
+            Path.Combine(AppContext.BaseDirectory, "..", "..", "..")
+        );
         inputFolder = Path.Combine(baseFolder, "input");
         destinationFolder = Path.Combine(baseFolder, "destination");
         processedFolder = Path.Combine(baseFolder, "processed");
@@ -31,7 +33,7 @@ public class FileTransferService
 
         if (files.Length == 0)
         {
-            Console.WriteLine("転送するファイルがありません。");
+            Logger.Info("転送するファイルがありません。");
             return;
         }
 
@@ -40,11 +42,11 @@ public class FileTransferService
             try
             {
                 var fileName = Path.GetFileName(file);
-
                 bool isValid = new FileValidator().Validate(file);
+                
                 if (!isValid)
                 {
-                    Console.WriteLine($"無効なファイル形式（転送失敗）: {fileName}");
+                    Logger.Error($"無効なファイル形式（転送失敗）: {fileName}");
                     MoveToError(file);
                     continue;
                 }
@@ -52,7 +54,7 @@ public class FileTransferService
                 var destinationPath = Path.Combine(destinationFolder, fileName);
                 var processedPath = Path.Combine(processedFolder, fileName);
 
-                Console.WriteLine($"転送開始: {fileName}");
+                Logger.Info($"転送開始: {fileName}");
 
                 // 転送
                 File.Copy(file, destinationPath, true);
@@ -60,11 +62,11 @@ public class FileTransferService
                 // 成功したファイルをprocessedへ移動
                 File.Move(file, processedPath, true);
 
-                Console.WriteLine($"転送成功: {fileName}");
+                Logger.Info($"転送成功: {fileName}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"転送失敗: {ex.Message}");
+                Logger.Error($"転送失敗: {ex.Message}");
                 MoveToError(file);
             }
         }
