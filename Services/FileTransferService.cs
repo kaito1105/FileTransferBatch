@@ -5,7 +5,7 @@ using FileTransferBatch.Models;
 
 public class FileTransferService
 {
-    private readonly string baseFolder;
+    // private readonly string baseFolder;
     private readonly string inputFolder;
     private readonly string destinationFolder;
     private readonly string processedFolder;
@@ -13,16 +13,16 @@ public class FileTransferService
     private readonly List<TransferResult> transferResults;
     private DateTime now;
 
-    public FileTransferService()
+    public FileTransferService(FileTransferSettings settings, string baseFolder)
     {
         transferResults = new List<TransferResult>();
-        baseFolder = Path.GetFullPath(
-            Path.Combine(AppContext.BaseDirectory, "..", "..", "..")
-        );
-        inputFolder = Path.Combine(baseFolder, "input");
-        destinationFolder = Path.Combine(baseFolder, "destination");
-        processedFolder = Path.Combine(baseFolder, "processed");
-        errorFolder = Path.Combine(baseFolder, "error");
+        // baseFolder = Path.GetFullPath(
+        //     Path.Combine(AppContext.BaseDirectory, "..", "..", "..")
+        // );
+        inputFolder = Path.Combine(baseFolder, settings.InputFolder);
+        destinationFolder = Path.Combine(baseFolder, settings.DestinationFolder);
+        processedFolder = Path.Combine(baseFolder, settings.ProcessedFolder);
+        errorFolder = Path.Combine(baseFolder, settings.ErrorFolder);
 
         // フォルダが存在しない場合は作成
         Directory.CreateDirectory(inputFolder);
