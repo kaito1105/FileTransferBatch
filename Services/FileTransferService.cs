@@ -16,9 +16,6 @@ public class FileTransferService
     public FileTransferService(FileTransferSettings settings, string baseFolder)
     {
         transferResults = new List<TransferResult>();
-        // baseFolder = Path.GetFullPath(
-        //     Path.Combine(AppContext.BaseDirectory, "..", "..", "..")
-        // );
         inputFolder = Path.Combine(baseFolder, settings.InputFolder);
         destinationFolder = Path.Combine(baseFolder, settings.DestinationFolder);
         processedFolder = Path.Combine(baseFolder, settings.ProcessedFolder);

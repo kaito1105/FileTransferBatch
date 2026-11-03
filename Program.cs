@@ -13,12 +13,10 @@ public static class Program
         var baseFolder = Path.GetFullPath(
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..")
         );
-
         var configuration = new ConfigurationBuilder()
             .SetBasePath(baseFolder)
             .AddJsonFile("appsettings.json")
             .Build();
-
         var settings = configuration
             .GetSection("FileTransfer")
             .Get<FileTransferSettings>();
@@ -29,7 +27,6 @@ public static class Program
         }
 
         var service = new FileTransferService(settings, baseFolder);
-
         Logger.Info("ファイル転送バッチ開始");
         service.Execute();
         Logger.Info("ファイル転送バッチ終了");
